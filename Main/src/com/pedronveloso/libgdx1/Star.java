@@ -15,6 +15,11 @@ public class Star {
     private float speed;
     private int windowWidth, windowHeight;
     private Random rnd;
+    private final static float SQUARE_SIZE = 1.5f;
+    // base speed is the minimum star speed possible
+    private final static float BASE_SPEED = 1f;
+    // max acceleration factor that will be ADDED to @BASE_SPEED
+    private final static float MAX_ACCELERATION_FACTOR = 5f;
 
     public Star(Random rnd, int windowWidth, int windowHeight) {
         starRect = new Rectangle();
@@ -22,7 +27,7 @@ public class Star {
         starRect.y = rnd.nextInt(windowHeight);
         starRect.width = 12;
         starRect.height = 12;
-        speed = 2 + rnd.nextFloat() * 5;
+        speed = BASE_SPEED + rnd.nextFloat() * MAX_ACCELERATION_FACTOR;
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
         this.rnd = rnd;
@@ -34,7 +39,7 @@ public class Star {
         if (starRect.x > windowWidth) {
             starRect.x = 0;
             starRect.y = rnd.nextInt(windowHeight);
-            speed = 2 + rnd.nextFloat() * 5;
+            speed = BASE_SPEED + rnd.nextFloat() * MAX_ACCELERATION_FACTOR;
         }
     }
 
@@ -44,5 +49,10 @@ public class Star {
 
     public float getY() {
         return starRect.y;
+    }
+
+
+    public float getSize() {
+        return SQUARE_SIZE * speed;
     }
 }

@@ -6,8 +6,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,7 +23,7 @@ import java.util.Random;
  */
 public class TestGame extends Game {
 
-    private final static int NUM_STARS = 200;
+    private final static int NUM_STARS = 900;
     private final int SHOW_TIE_AT = 4; //seconds
 
     private Stage ui;
@@ -30,6 +32,7 @@ public class TestGame extends Game {
     private OrthographicCamera camera;
     private Texture star, tieFighter;
     private SpriteBatch batch;
+    private BitmapFont font;
 
     private ArrayList<Star> stars;
     private TieStarWars tieStarWars;
@@ -46,6 +49,12 @@ public class TestGame extends Game {
         emergeLogo = new TextureRegion(new Texture(Gdx.files.internal("data/logo_simples.png")));
         star = new Texture(Gdx.files.internal("data/star.png"));
         tieFighter = new Texture(Gdx.files.internal("data/tieintercepter.png"));
+
+        //load font
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/DroidSans.ttf"));
+        font = generator.generateFont(15);//new BitmapFont();
+        font.setColor(1, 1, 1, 1);
+        generator.dispose();
 
         stars = new ArrayList<Star>(NUM_STARS);
         Random rnd = new Random();
@@ -108,7 +117,8 @@ public class TestGame extends Game {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         for (Star star1 : stars) {
-            batch.draw(star, star1.getX(), star1.getY());
+            //batch.draw(star, star1.getX(), star1.getY());
+            batch.draw(star, star1.getX(), star1.getY(), star1.getSize(), star1.getSize(), 0, 0, 12, 12, false, false);
             star1.move();
         }
         //draw tie intercepter?
@@ -120,6 +130,9 @@ public class TestGame extends Game {
                 fighterSound.play();
             }
         }
+
+        // draw FPS
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 30);
 
         batch.end();
 
